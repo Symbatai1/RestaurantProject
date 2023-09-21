@@ -1,0 +1,42 @@
+package peaksoft.entities;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "cheques")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Cheque {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "cheque_gen")
+    @SequenceGenerator(name = "cheque_gen", sequenceName = "cheque_seq",
+            allocationSize = 1)
+    private Long id;
+    private int priceAverage;
+    private LocalDate createAt;
+
+    @ManyToOne(cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH})
+    private User user;
+
+    @ManyToMany(mappedBy = "cheques", cascade = {
+            CascadeType.DETACH,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH,
+            CascadeType.MERGE})
+    private List<MenuItem> menuItems = new ArrayList<>();
+}
